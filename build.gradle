@@ -20,7 +20,7 @@ allprojects(
         return "git log -1 --pretty=format:%cd --date=format:%Y%m%d%H%M%S".execute().text.trim()
       }
       commitId = {
-        return "git rev-parse --short HEAD".execute().text.trim()
+       return "git rev-parse --short HEAD".execute().text.trim()
       }
       buildId = {
         if (System.getenv("BUILD_ID") != null) return ".${System.getenv("BUILD_ID")}"
@@ -46,12 +46,11 @@ allprojects(
       testCompile("com.jayway.awaitility:awaitility:1.7.0")
     })
 
-    task(copyDeps(type: Copy), {
-        from (configurations.runtime + configurations.testRuntime).exclude('*')
-        into('/tmp')
-      }
-    )
-
+    task copyDeps(type: Copy) {
+      from (configurations.runtime + configurations.testRuntime) exclude '*'
+      into '/tmp'
+    }
+    
     test(
       {
         testLogging(
@@ -72,11 +71,11 @@ allprojects(
   }
 )
 
-task(testReport(type: TestReport), {
-    destinationDir = file("${rootProject.projectDir}/build/test-results/html")
-    reportOn(subprojects*.test)
-  }
-)
+task testReport(type: TestReport) {
+  destinationDir = file("${rootProject.projectDir}/build/test-results/html")
+  reportOn subprojects*.test
+}
+
 
 test(
   {
@@ -101,9 +100,6 @@ configure(
   }
 )
 
-task(
-  wrapper(type: Wrapper), 
-  {
-    gradleVersion = '4.10.2'
-  }
-)
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.10.2'
+}
